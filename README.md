@@ -19,12 +19,38 @@ JudgeTrust asks an operational question:
 > At a stated maximum error rate, which cases can be judged automatically and
 > which cases must be deferred to a human?
 
-## What is RAG? A concrete example
+## What is RAG? A potential use case
 
 Retrieval-Augmented Generation (RAG) first retrieves relevant information from
 a trusted knowledge base and then asks an LLM to answer using that information.
-For example, a university assistant might retrieve the following policy when a
-student asks when the library closes on Saturday:
+
+JudgeTrust does **not** currently implement a complete RAG system. The present
+pilot starts after the retrieval and generation stages: its reference passages,
+clean answers, and controlled variants were authored as experimental data. It
+does not use an embedding model, vector database, retriever, or generator LLM.
+The only real LLM evaluated in the completed pilot is `qwen2.5:14b`, acting as
+the **judge** through local Ollama. Fake and recorded judges are infrastructure
+tests rather than answer-generation models.
+
+The distinction between a potential deployment and the current pilot is:
+
+```text
+Potential RAG deployment:
+Knowledge base → Retriever → Generator LLM → Candidate answers
+              → Judge LLM → JudgeTrust audit
+
+Current controlled pilot:
+Authored reference passage + controlled candidate answers
+              → Qwen2.5 14B Judge → JudgeTrust audit
+```
+
+The controlled design isolates judge behaviour. If a complete RAG pipeline
+were used, an observed error could also come from document chunking, retrieval,
+or answer generation, making order, verbosity, style, and citation effects
+harder to attribute to the judge itself.
+
+As a conceptual application example, a university RAG assistant might retrieve
+the following policy when a student asks when the library closes on Saturday:
 
 ```text
 Knowledge-base passage:
@@ -53,12 +79,9 @@ calibrated, and defers uncertain or inconsistent cases to a human. If no
 confidence threshold satisfies the target error rate, JudgeTrust reports that
 the decision should not be automated.
 
-```text
-Knowledge base → RAG answer → LLM judge → JudgeTrust audit
-```
-
-JudgeTrust does not build the RAG system. It audits the automated evaluator
-used to assess RAG or question-answering outputs.
+In a future deployment, JudgeTrust would audit the automated evaluator used to
+assess these RAG outputs. In the current repository, the same evaluation stage
+is reproduced with controlled, RAG-like grounded question-answering examples.
 
 ## Planned first release
 
@@ -136,12 +159,37 @@ JudgeTrust 回答一个可执行的问题：
 > 在给定最大容许错误率时，哪些样本可以自动评审，哪些样本必须转交
 > 人工？
 
-## 什么是 RAG？一个具体案例
+## 什么是 RAG？一个潜在应用场景
 
 RAG 是 Retrieval-Augmented Generation 的缩写，中文通常译为“检索增强
 生成”。它先从可信知识库中检索与问题相关的材料，再让大模型依据这些
-材料生成回答。例如，当学生询问图书馆周六几点闭馆时，大学咨询助手可能
-检索到下面的规定：
+材料生成回答。
+
+JudgeTrust **目前并没有实现完整的 RAG 系统**。当前 Pilot 从检索和生成
+之后的阶段开始：参考材料、干净回答和受控变体均作为实验数据人工编写。
+项目没有使用 embedding 模型、向量数据库、retriever 或 Generator LLM。
+已完成 Pilot 中唯一真实运行的 LLM 是通过本地 Ollama 调用的
+`qwen2.5:14b`，它只承担 **Judge** 角色。Fake Judge 和 Recorded Judge
+用于测试基础设施，不是回答生成模型。
+
+潜在部署与当前实验之间的区别是：
+
+```text
+潜在的完整 RAG 部署：
+知识库 → Retriever → Generator LLM → 候选回答
+      → Judge LLM → JudgeTrust 审计
+
+当前受控 Pilot：
+人工编写的参考材料 + 受控候选回答
+      → Qwen2.5 14B Judge → JudgeTrust 审计
+```
+
+这种受控设计有助于隔离 Judge 自身的行为。如果直接使用完整 RAG 流程，
+观察到的错误还可能来自文档切分、检索或回答生成，因而难以判断顺序、
+冗长度、风格和引用效应是否真正来自 Judge。
+
+作为概念性应用案例，当学生询问图书馆周六几点闭馆时，大学 RAG 咨询
+助手可能检索到下面的规定：
 
 ```text
 知识库材料：
@@ -168,12 +216,9 @@ JudgeTrust 会交换两个答案的展示顺序，检查评委是否仍然选择
 如果没有任何置信阈值能够满足目标错误率，JudgeTrust 会明确报告该判断
 不应自动化。
 
-```text
-知识库 → RAG 生成回答 → LLM Judge 评价 → JudgeTrust 审计
-```
-
-JudgeTrust 本身不负责构建 RAG 系统，而是审计用于评价 RAG 或问答输出的
-自动评委。
+在未来的真实部署中，JudgeTrust 可以审计用于评价这些 RAG 输出的自动
+评委。当前仓库则通过受控、类似 RAG 的带参考材料问答案例复现这一评审
+阶段。
 
 ## 首个版本计划
 
