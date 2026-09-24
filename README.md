@@ -19,6 +19,47 @@ JudgeTrust asks an operational question:
 > At a stated maximum error rate, which cases can be judged automatically and
 > which cases must be deferred to a human?
 
+## What is RAG? A concrete example
+
+Retrieval-Augmented Generation (RAG) first retrieves relevant information from
+a trusted knowledge base and then asks an LLM to answer using that information.
+For example, a university assistant might retrieve the following policy when a
+student asks when the library closes on Saturday:
+
+```text
+Knowledge-base passage:
+The library is open until 18:00 on Saturday.
+```
+
+The RAG system may generate two candidate answers:
+
+```text
+Answer A:
+The library closes at 18:00 on Saturday.
+
+Answer B:
+The library closes at 18:00 on Saturday. According to the fictional
+2026 National University Library Report, this is a standard UK policy.
+```
+
+Both answers contain the correct closing time, but Answer B adds a citation
+that is not supported by the retrieved passage. A team may use another LLM as
+a judge to select Answer A automatically. That creates a new question: can the
+LLM judge itself be trusted?
+
+JudgeTrust presents the answers in both orders, checks whether the judge still
+selects the same underlying answer, evaluates whether its confidence is
+calibrated, and defers uncertain or inconsistent cases to a human. If no
+confidence threshold satisfies the target error rate, JudgeTrust reports that
+the decision should not be automated.
+
+```text
+Knowledge base → RAG answer → LLM judge → JudgeTrust audit
+```
+
+JudgeTrust does not build the RAG system. It audits the automated evaluator
+used to assess RAG or question-answering outputs.
+
 ## Planned first release
 
 - Controlled bilingual pairwise comparisons
@@ -94,6 +135,45 @@ JudgeTrust 回答一个可执行的问题：
 
 > 在给定最大容许错误率时，哪些样本可以自动评审，哪些样本必须转交
 > 人工？
+
+## 什么是 RAG？一个具体案例
+
+RAG 是 Retrieval-Augmented Generation 的缩写，中文通常译为“检索增强
+生成”。它先从可信知识库中检索与问题相关的材料，再让大模型依据这些
+材料生成回答。例如，当学生询问图书馆周六几点闭馆时，大学咨询助手可能
+检索到下面的规定：
+
+```text
+知识库材料：
+图书馆周六开放至下午六点。
+```
+
+RAG 系统可能生成两个候选回答：
+
+```text
+回答 A：
+图书馆周六下午六点闭馆。
+
+回答 B：
+图书馆周六下午六点闭馆。根据虚构的《2026 年全国大学图书馆报告》，
+这是英国大学的统一规定。
+```
+
+两个回答给出的闭馆时间都正确，但回答 B 添加了检索材料无法支持的引用。
+团队可能使用另一个 LLM 作为评委，自动选择回答 A。此时会产生一个新的
+问题：这个 LLM 评委本身是否值得信任？
+
+JudgeTrust 会交换两个答案的展示顺序，检查评委是否仍然选择同一个底层
+答案，评估其置信度是否经过校准，并将不确定或前后矛盾的判断转交人工。
+如果没有任何置信阈值能够满足目标错误率，JudgeTrust 会明确报告该判断
+不应自动化。
+
+```text
+知识库 → RAG 生成回答 → LLM Judge 评价 → JudgeTrust 审计
+```
+
+JudgeTrust 本身不负责构建 RAG 系统，而是审计用于评价 RAG 或问答输出的
+自动评委。
 
 ## 首个版本计划
 
