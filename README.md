@@ -33,15 +33,13 @@ not be used until the data and evaluation pipeline have been validated.
 
 ## Current status
 
-Project specification, a 24-item bilingual pilot (192 comparisons), validated
-dataset records, an offline evaluation runner, and initial accuracy/order-bias
-metrics are in place. Bilingual prompts, strict JSON parsing, and offline
-recorded-response replay are also implemented. Dual-order human deferral and
-risk-controlled threshold evaluation are available, together with isotonic
-confidence calibration and calibration diagnostics. Real judge adapters and
-human-readable reporting remain for later approved phases. A dependency-free
-Ollama adapter is implemented and tested with simulated HTTP responses; it has
-not yet been used for a real model run.
+The project now includes a validated 24-item bilingual pilot (192
+comparisons), deterministic dataset generation, strict structured-output
+parsing, offline replay, dual-order human deferral, risk–coverage evaluation,
+isotonic confidence calibration, and a dependency-free Ollama adapter. A full
+local `qwen2.5:14b` pilot reached 77.60% record-level accuracy, but no
+validation threshold satisfied the predefined 5% risk target. See the
+[bilingual pilot report](reports/qwen2.5-14b-pilot.md).
 
 See:
 
@@ -51,6 +49,8 @@ See:
 - [Metric definitions](docs/metrics.md)
 - [Judge adapter contract](docs/judge_adapter.md)
 - [Local Ollama adapter](docs/local_ollama.md)
+- [Qwen2.5 14B pilot report](reports/qwen2.5-14b-pilot.md)
+- [Machine-readable pilot summary](reports/qwen2.5-14b-pilot-summary.json)
 
 ## Development
 
@@ -67,6 +67,7 @@ python scripts/build_selective_fixture.py
 python scripts/run_selective_pilot.py
 python scripts/build_overconfident_fixture.py
 python scripts/run_calibrated_pilot.py
+python scripts/run_ollama_full_pilot.py
 ```
 
 ## License
@@ -108,13 +109,12 @@ API。
 
 ## 当前状态
 
-项目规格、包含 192 条比较记录的 24 项双语 Pilot、可验证的数据记录、
-离线评估运行器，以及首批准确率和顺序偏差指标已经建立。真实 Judge
-接入前所需的双语提示模板、严格 JSON 解析和离线记录重放也已实现。
-双顺序人工转交和风险受控的阈值评估也已实现。真实 Judge 适配器、
-单调置信度校准及其诊断指标也已实现。真实 Judge 适配器和人类可读报告
-将在后续经确认的阶段中实现。项目已经实现无第三方依赖的 Ollama
-适配器，并通过模拟 HTTP 响应完成测试，但尚未运行真实模型。
+项目现已包含经过验证的 24 项双语 Pilot（192 条比较记录）、确定性数据
+生成、严格结构化输出解析、离线重放、双顺序人工转交、风险—覆盖率评估、
+单调置信度校准，以及无第三方依赖的 Ollama 适配器。本地
+`qwen2.5:14b` 完整 Pilot 的记录级准确率为 77.60%，但没有任何
+validation 阈值满足预设的 5% 风险目标。详见
+[中英文 Pilot 报告](reports/qwen2.5-14b-pilot.md)。
 
 相关文档：
 
@@ -124,6 +124,8 @@ API。
 - [指标定义](docs/metrics.md)
 - [Judge 适配器规范](docs/judge_adapter.md)
 - [本地 Ollama 适配器](docs/local_ollama.md)
+- [Qwen2.5 14B Pilot 报告](reports/qwen2.5-14b-pilot.md)
+- [机器可读 Pilot 汇总](reports/qwen2.5-14b-pilot-summary.json)
 
 ## 开发
 
@@ -140,6 +142,7 @@ python scripts/build_selective_fixture.py
 python scripts/run_selective_pilot.py
 python scripts/build_overconfident_fixture.py
 python scripts/run_calibrated_pilot.py
+python scripts/run_ollama_full_pilot.py
 ```
 
 ## 许可证

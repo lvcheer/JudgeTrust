@@ -65,7 +65,12 @@ class OllamaJudgeTests(unittest.TestCase):
         body = json.loads(http_request.data)
         self.assertEqual(body["model"], "qwen2.5:14b")
         self.assertFalse(body["stream"])
-        self.assertEqual(body["format"], "json")
+        self.assertEqual(body["format"]["type"], "object")
+        self.assertEqual(
+            body["format"]["properties"]["reason_code"]["enum"],
+            ["factuality", "completeness", "citation", "instruction", "uncertain"],
+        )
+        self.assertFalse(body["format"]["additionalProperties"])
         self.assertEqual(body["options"], {"temperature": 0, "seed": 0})
         self.assertNotIn("gold_winner", body["prompt"])
 
@@ -90,4 +95,3 @@ class OllamaJudgeTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

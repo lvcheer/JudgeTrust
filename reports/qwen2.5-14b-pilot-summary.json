@@ -1,0 +1,44 @@
+{
+  "report_schema_version": 1,
+  "model": "qwen2.5:14b",
+  "quantization": "Q4_K_M",
+  "prompt_version": "v2-json-schema",
+  "base_items": 24,
+  "comparisons": 192,
+  "pairs": 96,
+  "runtime_seconds": 1396.0855146250688,
+  "record_metrics": {
+    "accuracy": 0.7760416666666666,
+    "order_consistency_rate": 0.7395833333333334,
+    "by_language": {
+      "en": 0.8333333333333334,
+      "zh": 0.71875
+    },
+    "by_perturbation": {
+      "correctness": 1.0,
+      "style": 0.8541666666666666,
+      "unsupported_citation": 0.75,
+      "verbosity": 0.5
+    }
+  },
+  "dual_order_metrics": {
+    "automated_pairs": 71,
+    "human_pairs": 25,
+    "coverage": 0.7395833333333334,
+    "errors": 8,
+    "observed_risk": 0.11267605633802817
+  },
+  "validation_audit": {
+    "target_risk": 0.05,
+    "automated_pairs": 17,
+    "total_pairs": 24,
+    "coverage": 0.7083333333333334,
+    "errors": 3,
+    "observed_risk": 0.17647058823529413,
+    "risk_upper_95": 0.3689669780690258,
+    "status": "insufficient_evidence",
+    "selected_threshold": null,
+    "formal_test_result": null
+  },
+  "raw_predictions_published": false
+}

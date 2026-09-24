@@ -11,6 +11,37 @@ from .interfaces import JudgeRequest, JudgeResult
 from .prompting import build_judge_prompt, parse_judge_response
 
 
+JUDGE_RESULT_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "winner": {"type": "string", "enum": ["A", "B", "tie", "abstain"]},
+        "score_a": {"type": "number", "minimum": 0, "maximum": 1},
+        "score_b": {"type": "number", "minimum": 0, "maximum": 1},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "reason_code": {
+            "type": "string",
+            "enum": [
+                "factuality",
+                "completeness",
+                "citation",
+                "instruction",
+                "uncertain",
+            ],
+        },
+        "explanation": {"type": "string", "minLength": 1},
+    },
+    "required": [
+        "winner",
+        "score_a",
+        "score_b",
+        "confidence",
+        "reason_code",
+        "explanation",
+    ],
+    "additionalProperties": False,
+}
+
+
 class OllamaConnectionError(RuntimeError):
     """Raised when the local Ollama service cannot complete a request."""
 
@@ -42,7 +73,7 @@ class OllamaJudge:
                 "model": self.model,
                 "prompt": build_judge_prompt(request),
                 "stream": False,
-                "format": "json",
+                "format": JUDGE_RESULT_SCHEMA,
                 "options": {"temperature": 0, "seed": 0},
             },
             ensure_ascii=False,
@@ -71,4 +102,3 @@ class OllamaJudge:
         if not isinstance(envelope, dict) or not isinstance(envelope.get("response"), str):
             raise OllamaResponseError("Ollama envelope must contain a text response")
         return parse_judge_response(envelope["response"])
-
